@@ -15,14 +15,16 @@ LANE_4 = 640
 LANE_5 = 695
 LANE_6 = 760
 window = pygame.display.set_mode((WIDTH, HEIGHT))
-bg = pygame.image.load(os.path.join('.','city_background.png')).convert()
+road = pygame.image.load(os.path.join('.','road_standing.png')).convert_alpha()
+fence = pygame.image.load(os.path.join('.','background_fence_city.png')).convert_alpha()
+city = pygame.image.load(os.path.join('.','backest_ground_city.png')).convert_alpha()
 enemies = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 ADDENEMY = pygame.USEREVENT + 1
 
 pygame.time.set_timer(ADDENEMY, 1000)
 
-bgX2 = bg.get_width
+bgX2 = road.get_width
 class Player(pygame.sprite.Sprite):
 
     def __init__(self):
@@ -88,8 +90,10 @@ def main(window):
     player.rect.y = LANE_1
     lane_number = 1 
     clock = pygame.time.Clock()
-    test_background_X = 0
-    test_background_X_2 = test_background_X + 8000
+    street_x = 0
+    street_x_2 = street_x + 8000
+    city_x = 0
+    city_x_2 = city_x + 8000
     run = True
 
     while run:
@@ -117,11 +121,16 @@ def main(window):
 
                 all_sprites.add(new_enemy)
     
-        test_background_X = test_background_X - 20
-        test_background_X_2 = test_background_X_2 - 20
-        
-        window.blit(bg, (test_background_X, 0))
-        window.blit(bg, (test_background_X_2, 0))
+        street_x = street_x - 20
+        street_x_2 = street_x_2 - 20
+        city_x = city_x - 1
+        city_x_2 = city_x_2 - 1
+        window.blit(city, (city_x, 0))
+        window.blit(city, (city_x_2, 0))
+        window.blit(fence, (street_x, 0))
+        window.blit(fence, (street_x_2, 0))
+        window.blit(road, (street_x, 0))
+        window.blit(road, (street_x_2, 0))
         window.blit(player.surf, player.rect)
         for entity in all_sprites:
             window.blit(entity.surf, entity.rect)
@@ -144,14 +153,18 @@ def main(window):
         
 
 
-        print(test_background_X)
-        if test_background_X <= -8000:
-            test_background_X = test_background_X_2 + 8000
-        if test_background_X_2 <= -8000:
-            test_background_X_2 = test_background_X + 8000
+        print(str(city_x) + "," + str(street_x))
+        if street_x <= -8000:
+            street_x = street_x_2 + 8000
+        if street_x_2 <= -8000:
+            street_x_2 = street_x + 8000
+        if city_x <= -8000:
+            city_x = city_x_2 + 8000
+        if city_x_2 <= -8000:
+            city_x_2 = city_x + 8000
         enemies.update()
         
-        pygame.display.update()
+        pygame.display.flip()
             
         
     pygame.quit()
